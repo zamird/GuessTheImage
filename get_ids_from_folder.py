@@ -2,7 +2,8 @@ from requests import request
 from bs4 import BeautifulSoup as bs
 
 
-url = 'https://script.google.com/macros/s/AKfycbwTRBhATWFXJjIWiA9re0SjKkKXC-rGFySAxE8dz8e2Nwj2ClA/exec'
+get_ids_from_folder_url = \
+    'https://script.google.com/macros/s/AKfycbwTRBhATWFXJjIWiA9re0SjKkKXC-rGFySAxE8dz8e2Nwj2ClA/exec'
 
 
 def _parser(resp):
@@ -15,7 +16,7 @@ def _parser(resp):
 
 def get_ids(folder_id):
     params = {'id': folder_id}
-    res = request(method='GET', url=url, params=params)
+    res = request(method='GET', url=get_ids_from_folder_url, params=params)
     if res.status_code == 200:
         return _parser(res)
     else:

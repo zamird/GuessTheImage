@@ -1,6 +1,6 @@
 from flask import Flask
 import get_ids_from_folder
-from app import guess_the_image_content
+from app import App
 
 client = Flask(__name__)
 
@@ -34,7 +34,7 @@ def get_concepts_for_file(folder_id, file_id):
         res = res + f'</p></body></html>'
         return res
     res = f'<!DOCTYPE html><html><body><p>The app will try to guess the content of the image: <br>'
-    res = res + f'<br>{guess_the_image_content(file_id)}</p><br>'
+    res = res + f'<br>{App.guess_the_image_content(file_id)}</p><br>'
     res = res + f'<img src="https://drive.google.com/thumbnail?id={file_id}' \
                 f'&sz=w400-h300-p-k-nu" alt="Image" height="100" width="100"></body></html>'
     return res
