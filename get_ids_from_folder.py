@@ -21,7 +21,3 @@ def get_ids(folder_id):
     else:
         return "Error: " + res.status_code
 
-# res = request('GET', url)
-# print(res.status_code)
-# print(_parser(res))
-# id = '1W9QPPgnXqJkY4pk0Wcx0m427JNT1Hwer'
