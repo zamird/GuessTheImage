@@ -1,21 +1,45 @@
-from clarifai.rest import ClarifaiApp
-from print import Print as Ptr
-from generate_tags_json import GenerateTagsJson as TagsJsn
+from flask import Flask
+import get_ids_from_folder
+from client import Client
+
+app = Flask(__name__)
 
 
-class App:
-    def __init__(self, image_id):
-        self.app = ClarifaiApp(api_key='57c6104fb12f460db9674c3c86968020')
-        general_model = self.app.public_models.general_model
-        color_model = self.app.public_models.color_model
-        custom_model = self.app.models.get('object-recognition-model')
-        self.printer = Ptr(general_model, color_model, custom_model)
-        self.tags_json = TagsJsn(general_model, color_model, custom_model)
-        self.image_id = image_id
+@app.route('/')
+def home():
+    res = f'<!DOCTYPE html><html><body><h1>Welcome to Guess The Image App!</h1><br>'
+    res = res + f'<p><b>Currently supported requests: </b><br>'
+    res = res + f'<b>1. Get list of files within folder: </b> GET /folder/<i>folder_id</i> <br>'
+    res = res + f'<b>2. Guess content of image, based on file_id: </b>' \
+                f'GET /folder/<i>folder_id</i>/file/<i>file_id</i>'
+    res = res + f'</p></body></html>'
+    return res
 
-    def guess_the_image_content(self):
-        self.printer.set_image_id(self.image_id)
-        self.tags_json.set_image_id(self.image_id)
-        concepts = self.printer.get_concepts(custom_only=True)
-        colors_hex = self.printer.get_colors_hex()
-        return {'concepts': concepts, 'colors_hex': colors_hex}
+
+@app.route('/folder/<string:folder_id>')
+def get_files_for_folder(folder_id):
+    file_list = get_ids_from_folder.get_ids(folder_id)
+    res = f'<!DOCTYPE html><html><body><p>Files in folder: <br>'
+    res = res + f'{file_list}'
+    res = res + f'</p></body></html>'
+    return res
+
+
+@app.route('/folder/<string:folder_id>/file/<string:file_id>')
+def get_concepts_for_file(folder_id, file_id):
+    file_list = get_ids_from_folder.get_ids(folder_id)
+    if file_id not in file_list:
+        res = f'<!DOCTYPE html><html><body><p>'
+        res = res + f'File {file_id} is not in folder {folder_id}'
+        res = res + f'</p></body></html>'
+        return res
+    client = Client(file_id)
+    res = f'<!DOCTYPE html><html><body><p>The app will try to guess the content of the image: <br>'
+    res = res + f'<br>{client.guess_the_image_content()}</p><br>'
+    res = res + f'<img src="https://drive.google.com/thumbnail?id={file_id}' \
+                f'&sz=w400-h300-p-k-nu" alt="Image" height="100" width="100"></body></html>'
+    return res
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
