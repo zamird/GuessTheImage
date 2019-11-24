@@ -1,6 +1,7 @@
 from clarifai.rest import ClarifaiApp
 from print import Print as Ptr
 from generate_tags_json import GenerateTagsJson as TagsJsn
+from update_image_description import *
 
 
 class Client:
@@ -19,3 +20,15 @@ class Client:
         concepts = self.printer.get_concepts(custom_only=True)
         colors_hex = self.printer.get_colors_hex()
         return {'concepts': concepts, 'colors_hex': colors_hex}
+
+    def set_cache(self):
+        set_description(self.image_id, self.guess_the_image_content())
+
+    def get_cache(self):
+        cache = get_description(self.image_id)
+        if 'concepts' in cache:
+            return cache
+        return ''
+
+    def clear_cache(self):
+        set_description(self.image_id, "")

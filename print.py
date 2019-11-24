@@ -25,7 +25,7 @@ class Print:
         url = f'https://drive.google.com/thumbnail?id={image_id}&sz=w400-h300-p-k-nu'
         self.set_url(url)
 
-    def print_all(self, custom_only=False):
+    def _print_all(self, custom_only=False):
         if not self.url:
             raise ValueError('Image url needs to be set')
         if not custom_only:
@@ -54,3 +54,6 @@ class Print:
         color_list = get_colors_hex(get_concepts(color_res, is_colors=True))
         color_list.sort()
         return f'Colors hex: {color_list}'
+
+    def get_thumbnail(self):
+        return self.url
