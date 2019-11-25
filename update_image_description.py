@@ -27,6 +27,8 @@ def _advanced_parser(resp):
                .replace('\\\\u0027\\x5d', "\'")
                .replace('\\x5b\\\\u0027', "\'")
                .replace('\\/', '/')
+               .replace('\\x5b', '[')
+               .replace('\\x5d', ']')
                .split(',\\x22ncc\\x22')[0]
                .replace('\\\\u0027', '\''))
 
@@ -43,7 +45,9 @@ def set_description(file_id, description):
 def get_description(file_id):
     params = {'id': file_id}
     res = request(method='GET', url=update_image_description_url, params=params)
-    if res.status_code == 200:
+    if (res.status_code == 200) & ('concepts' in str(bs(res.content, "html.parser").find('body').text)):
         return _advanced_parser(res)
+    elif res.status_code == 200:
+        return ""
     else:
         return "Error: " + res.status_code
