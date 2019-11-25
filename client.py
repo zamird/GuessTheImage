@@ -26,9 +26,10 @@ class Client:
 
     def get_cache(self):
         cache = get_description(self.image_id)
-        if 'concepts' in cache:
-            return cache
-        return ''
+        return cache
+        # if 'concepts' in cache:
+        #     return cache
+        # return ''
 
     def clear_cache(self):
         set_description(self.image_id, "")

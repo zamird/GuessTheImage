@@ -14,11 +14,21 @@ def home():
 
     res = res + f'<p><b>Example file (tiger): </b><br> {example_file} </p><br>'
     res = res + f'<p><b>Example folder (DDG): </b><br> {example_folder} </p><br>'
-
+    res = res + f'<p><b>Example search (DDG): </b><br>' \
+                f'<a href="https://drive.google.com/drive/search?q=tiger%20parent:1W9QPPgnXqJkY4pk0Wcx0m427JNT1Hwer">' \
+                f'Keyword:tiger</a></b></p>'
     res = res + f'<p><b>Currently supported requests: </b><br><ul>'
-    res = res + f'<b><li>Get list of files within folder: </b> GET /folder/<i>folder_id</i> </li><br>'
+    res = res + f'<b><li>Get list of files within folder: </b> GET /folder/<i>folder_id</i> </li>'
     res = res + f'<b><li>Guess content of image, based on file_id: </b>' \
                 f'GET /folder/<i>folder_id</i>/file/<i>file_id</i></li>'
+    res = res + f'<b><li>Also - Guess content of image, based on file_id: </b>' \
+                f'GET /file/<i>file_id</i></li>'
+    res = res + f'<b><li>Get cache for file, based on file_id: </b>' \
+                f'GET /file/<i>file_id</i>/cache</li>'
+    res = res + f'<b><li>Clear cache for file, based on file_id: </b>' \
+                f'GET /file/<i>file_id</i>/cache/clear</li>'
+    res = res + f'<b><li>Get thumbnail for file, based on file_id: </b>' \
+                f'GET /file/<i>file_id</i>/thumbnail</li>'
     res = res + f'</ul></p>'
 
     res = res + f'<p><b>Demo:</b><br>'
@@ -52,7 +62,7 @@ def get_thumbnail(file_id):
 def get_cache(file_id):
     client = Client(file_id)
     res = f'<!DOCTYPE html><html><body>'
-    res = res + str(client.get_cache())
+    res = res + client.get_cache()
     res = res + f'</body></html>'
     return res
 
